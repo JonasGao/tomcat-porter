@@ -13,10 +13,10 @@ func main() {
 		os.Exit(1)
 		return
 	}
-	fmt.Println("Server port is: " + server.Port)
+	fmt.Print("Using port has, server = " + server.Port)
 	for _, service := range server.Services {
 		for _, connector := range service.Connectors {
-			fmt.Println("Connector port is: " + connector.Port)
+			fmt.Println(", connector = " + connector.Port)
 		}
 	}
 }
