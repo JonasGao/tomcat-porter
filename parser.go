@@ -12,7 +12,6 @@ func parse(path string) (Server, error) {
 	if err != nil {
 		return emptyServer(), err
 	}
-	fmt.Println("Successfully opened xml file.")
 	defer func(xmlFile *os.File) {
 		err := xmlFile.Close()
 		if err != nil {
