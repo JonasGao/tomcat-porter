@@ -16,7 +16,8 @@ func main() {
 	fmt.Print("Using port has, server = " + server.Port)
 	for _, service := range server.Services {
 		for _, connector := range service.Connectors {
-			fmt.Println(", connector = " + connector.Port)
+			fmt.Print(", connector = " + connector.Port)
 		}
 	}
+	fmt.Println()
 }
