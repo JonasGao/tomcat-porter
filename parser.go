@@ -33,6 +33,7 @@ func parse(path string) {
 		os.Exit(2)
 		return
 	}
+	fmt.Println("Parsing " + path)
 	fmt.Println("Server port   : " + server.Port)
 	for _, service := range server.Services {
 		fmt.Println("  Service " + service.Name)
