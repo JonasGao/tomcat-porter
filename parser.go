@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"io/fs"
 	"os"
+	"path/filepath"
 )
 
 func load(path string) (Server, error) {
@@ -19,7 +21,7 @@ func load(path string) (Server, error) {
 			fmt.Println(err)
 		}
 	}(xmlFile)
-	b, _ := ioutil.ReadAll(xmlFile)
+	b, _ := io.ReadAll(xmlFile)
 	var server Server
 	err = xml.Unmarshal(b, &server)
 	return server, err
@@ -41,5 +43,39 @@ func parse(path string) {
 			fmt.Println("    Connector : port = " + connector.Port + ", redirectPort = " + connector.RedirectPort)
 		}
 	}
-	fmt.Println()
+}
+
+func parseDir(path string, option string) {
+	err := filepath.WalkDir(path, visit(option))
+	if err != nil {
+		fmt.Println("Failed walk dir.")
+		fmt.Println(err)
+	}
+}
+
+func visit(option string) func(string, fs.DirEntry, error) error {
+	switch option {
+	case "-q":
+		return func(path string, d fs.DirEntry, e error) error {
+			if e != nil {
+				return nil
+			}
+			if d.Name() == "server.xml" {
+				parse(path)
+			}
+			return nil
+		}
+	default:
+	}
+	return func(path string, d fs.DirEntry, e error) error {
+		if e != nil {
+			fmt.Println("Skip " + path + ", cause: ")
+			fmt.Println(e)
+			return nil
+		}
+		if d.Name() == "server.xml" {
+			parse(path)
+		}
+		return nil
+	}
 }
