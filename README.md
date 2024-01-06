@@ -5,10 +5,22 @@ A little tool to read tomcat server.xml and print all using port.
 
 ## Usage
 
-### 0. Print version
+```text
+NAME:
+   tomcat-porter - Parse tomcat server.xml, and print all ports.
+USAGE:
+   tomcat-porter [global options] [path to server.xml or dir]
+VERSION:
+   1.0.2
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+GLOBAL OPTIONS:
+   --quite, -q             Ignore filesystem error. (default: false)
+   --mode value, -m value  Print ports in list/simple/table mode. (default: "lis
+t")
+   --help, -h              show help
+   --version, -v           print the version
 
-```shell
-tomcat-porter version
 ```
 
 ### 1. Auto parse conf/server.xml and print ports.
@@ -16,15 +28,6 @@ tomcat-porter version
 ```shell
 cd tomcat
 tomcat-porter
-```
-
-`tomcat-porter` auto read `conf/server.xml` in current dir. And print ports like:
-
-```text
-Parsing ./conf/server.xml
-Server port   : 8005                            
-  Service Catalina                              
-    Connector : port = 8080, redirectPort = 8443
 ```
 
 ### 2. Specify server.xml
@@ -44,7 +47,14 @@ tomcat-porter /usr/local/
 Ignore filesystem error with `-q`:
 
 ```shell
-tomcat-porter /usr/local/ -q
+tomcat-porter -q /usr/local/
+```
+
+Print table or other with `-m`
+
+```shell
+tomcat-porter -m table /usr/local/
+tomcat-porter -m simple /usr/local/
 ```
 
 ## Build
