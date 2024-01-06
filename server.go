@@ -6,6 +6,7 @@ type Server struct {
 	XMLName  xml.Name  `xml:"Server"`
 	Services []Service `xml:"Service"`
 	Port     string    `xml:"port,attr"`
+	Path     string
 }
 
 type Service struct {

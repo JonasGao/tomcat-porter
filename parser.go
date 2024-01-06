@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"github.com/urfave/cli/v2"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
 )
 
-func load(path string) (Server, error) {
+func parse(path string) (Server, error) {
 	xmlFile, err := os.Open(path)
 	if err != nil {
 		return emptyServer(), err
@@ -24,48 +25,46 @@ func load(path string) (Server, error) {
 	b, _ := io.ReadAll(xmlFile)
 	var server Server
 	err = xml.Unmarshal(b, &server)
+	server.Path = path
 	return server, err
 }
 
-func parse(path string) {
-	server, err := load(path)
+func parseOne(path string, ctx *cli.Context) error {
+	server, err := parse(path)
 	if err != nil {
-		fmt.Println("Failed load xml file.")
+		fmt.Println("Failed load xml file: " + path)
 		fmt.Println(err)
-		os.Exit(2)
-		return
+		return err
 	}
-	fmt.Println("Parsing " + path)
-	fmt.Println("Server port   : " + server.Port)
-	for _, service := range server.Services {
-		fmt.Println("  Service " + service.Name)
-		for _, connector := range service.Connectors {
-			fmt.Println("    Connector : port = " + connector.Port + ", redirectPort = " + connector.RedirectPort)
-		}
-	}
+	render([]Server{server}, ctx)
+	return nil
 }
 
-func parseDir(path string, option string) {
-	err := filepath.WalkDir(path, visit(option))
+func parseDir(path string, quite bool, cCtx *cli.Context) {
+	servers := make([]Server, 0)
+	err := filepath.WalkDir(path, visit(&servers, quite))
 	if err != nil {
 		fmt.Println("Failed walk dir.")
 		fmt.Println(err)
+	} else {
+		render(servers, cCtx)
 	}
 }
 
-func visit(option string) func(string, fs.DirEntry, error) error {
-	switch option {
-	case "-q":
+func visit(servers *[]Server, quite bool) func(string, fs.DirEntry, error) error {
+	if quite {
 		return func(path string, d fs.DirEntry, e error) error {
 			if e != nil {
 				return nil
 			}
 			if d.Name() == "server.xml" {
-				parse(path)
+				server, err := parse(path)
+				if err == nil {
+					*servers = append(*servers, server)
+				}
 			}
 			return nil
 		}
-	default:
 	}
 	return func(path string, d fs.DirEntry, e error) error {
 		if e != nil {
@@ -74,7 +73,12 @@ func visit(option string) func(string, fs.DirEntry, error) error {
 			return nil
 		}
 		if d.Name() == "server.xml" {
-			parse(path)
+			server, err := parse(path)
+			if err == nil {
+				*servers = append(*servers, server)
+			} else {
+				return err
+			}
 		}
 		return nil
 	}
