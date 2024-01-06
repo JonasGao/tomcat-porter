@@ -19,6 +19,7 @@ func main() {
 	app := &cli.App{
 		Name:                 "tomcat-porter",
 		Usage:                "Parse tomcat server.xml, and print all ports.",
+		UsageText:            "tomcat-porter [global options] [path to server.xml or dir]",
 		Version:              Version,
 		EnableBashCompletion: true,
 		Flags: []cli.Flag{
