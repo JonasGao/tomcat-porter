@@ -53,6 +53,7 @@ func main() {
 				if err != nil {
 					return err
 				}
+				return nil
 			}
 			if strings.HasSuffix(path, "/") {
 				parseDir(path, ctx.Bool(quite), ctx)
