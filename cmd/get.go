@@ -55,8 +55,9 @@ func query(ctx *cli.Context) error {
 }
 
 var Get = cli.Command{
-	Name:    "get",
-	Aliases: []string{"g"},
-	Usage:   "Get value by XPath with server.xml.",
-	Action:  query,
+	Name:      "get",
+	Aliases:   []string{"g"},
+	Usage:     "Get value by XPath with server.xml.",
+	UsageText: "tomcat-porter get <xpath> [server.xml file or dir path]",
+	Action:    query,
 }
