@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 )
@@ -10,22 +11,26 @@ func Search() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	s, err := join(path, "server.xml")
-	if err == nil {
-		return s, nil
-	}
-	s, err = join(path, filepath.Join("conf", "server.xml"))
-	if err == nil {
-		return s, nil
-	}
-	return "", nil
+	return SearchIn(path)
 }
 
-func join(parent string, target string) (string, error) {
+func joinAndStat(parent string, target string) (string, error) {
 	s := filepath.Join(parent, target)
 	_, err := os.Stat(s)
 	if err == nil {
 		return s, nil
 	}
 	return "", err
+}
+
+func SearchIn(path string) (string, error) {
+	s, err := joinAndStat(path, "server.xml")
+	if err == nil {
+		return s, nil
+	}
+	s, err = joinAndStat(path, filepath.Join("conf", "server.xml"))
+	if err == nil {
+		return s, nil
+	}
+	return "", errors.New("there is no server.xml or conf/server.xml")
 }

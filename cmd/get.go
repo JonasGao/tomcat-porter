@@ -6,6 +6,7 @@ import (
 	"github.com/jonasgao/tomcat-porter/util"
 	"github.com/urfave/cli/v2"
 	"os"
+	"strings"
 )
 
 func query(ctx *cli.Context) error {
@@ -21,16 +22,13 @@ func query(ctx *cli.Context) error {
 	if path == "" {
 		path, err = util.Search()
 		if err != nil {
-			fmt.Println("Failed search conf/server.xml.")
 			return err
 		}
-		if path == "" {
-			fmt.Println("There is no server.xml or conf/server.xml.")
-			return nil
+	} else if strings.HasSuffix(path, "/") {
+		path, err = util.SearchIn(path)
+		if err != nil {
+			return err
 		}
-	}
-	if err != nil {
-		return err
 	}
 	file, err = os.Open(path)
 	if err != nil {

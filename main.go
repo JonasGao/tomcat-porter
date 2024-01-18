@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/jonasgao/tomcat-porter/cmd"
 	"github.com/urfave/cli/v2"
-	"log"
 	"os"
 )
 
@@ -23,6 +23,7 @@ func main() {
 	}
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print("Error: ")
+		fmt.Println(err)
 	}
 }
