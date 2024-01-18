@@ -1,4 +1,4 @@
-$Version = 3
+$Version = 4
 $BuildTime = Get-Date -Format yyyyMMdd-HHmmss
 $GitHash = $(git rev-parse HEAD)
 $env:GOOS = "linux"

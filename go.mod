@@ -3,6 +3,7 @@ module github.com/jonasgao/tomcat-porter
 go 1.13
 
 require (
+	github.com/antchfx/xmlquery v1.3.18 // indirect
 	github.com/fatih/color v1.16.0
 	github.com/jedib0t/go-pretty/v6 v6.5.0
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect

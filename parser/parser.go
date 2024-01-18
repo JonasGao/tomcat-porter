@@ -1,9 +1,8 @@
-package main
+package parser
 
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/urfave/cli/v2"
 	"io"
 	"io/fs"
 	"os"
@@ -29,25 +28,25 @@ func parse(path string) (Server, error) {
 	return server, err
 }
 
-func parseOne(path string, ctx *cli.Context) error {
+func One(path string) ([]Server, error) {
 	server, err := parse(path)
 	if err != nil {
 		fmt.Println("Failed load xml file: " + path)
 		fmt.Println(err)
-		return err
+		return nil, err
 	}
-	render([]Server{server}, ctx)
-	return nil
+	return []Server{server}, nil
 }
 
-func parseDir(path string, quite bool, cCtx *cli.Context) {
+func Dir(path string, quite bool) ([]Server, error) {
 	servers := make([]Server, 0)
 	err := filepath.WalkDir(path, visit(&servers, quite))
 	if err != nil {
 		fmt.Println("Failed walk dir.")
 		fmt.Println(err)
+		return nil, err
 	} else {
-		render(servers, cCtx)
+		return servers, nil
 	}
 }
 

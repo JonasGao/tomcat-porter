@@ -1,15 +1,15 @@
-package main
+package util
 
 import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/list"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/urfave/cli/v2"
+	"github.com/jonasgao/tomcat-porter/parser"
 	"os"
 )
 
-func renderTable(servers []Server) {
+func renderTable(servers []parser.Server) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"Server", "Service", "Connector", "Connector"})
@@ -29,21 +29,21 @@ func renderTable(servers []Server) {
 	t.Render()
 }
 
-func render(server []Server, ctx *cli.Context) {
-	switch ctx.String(mode) {
+func Render(server []parser.Server, mode string) {
+	switch mode {
 	case "simple":
 		renderSimple(server)
-		break
+		return
 	case "table":
 		renderTable(server)
-		break
-	default:
+		return
 	case "list":
 		renderList(server)
+		return
 	}
 }
 
-func renderList(servers []Server) {
+func renderList(servers []parser.Server) {
 	p := color.New(color.FgWhite, color.BgGreen).SprintFunc()
 	l := list.NewWriter()
 	for _, server := range servers {
@@ -68,7 +68,7 @@ func renderList(servers []Server) {
 	l.Render()
 }
 
-func renderSimple(servers []Server) {
+func renderSimple(servers []parser.Server) {
 	for _, server := range servers {
 		fmt.Println(server.Port)
 		for _, service := range server.Services {

@@ -1,11 +1,11 @@
-package main
+package util
 
 import (
 	"os"
 	"path/filepath"
 )
 
-func search() (string, error) {
+func Search() (string, error) {
 	path, err := os.Getwd()
 	if err != nil {
 		return "", err
